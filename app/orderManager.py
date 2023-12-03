@@ -1,23 +1,58 @@
 
-from app.stlsManager import CalculateCost
+from app.stlsManager import CalculateCost, FindStlFilePath
+
+class Address:
+    def __init__(self,streetaddress:str,town:str,postal:int):
+        self.streetAddress = streetaddress
+        self.town = town
+        self.postalcode = postal
+    
+    def __str__(self):
+        return str({"streetAddress":self.streetAddress,"town": self.town ,"postal":self.postalcode})
+    
+
+
+class Payment:
+
+    def __init__(self,firstname:str,lastname:str, address:Address,payment:float):
+        self.address = address
+        self.firstName = firstname
+        self.lastname = lastname
+        self.paymentSent = 0.0
+
+    def makePayment(self, payment:float):
+        self.paymentSent = payment
+
+
 class Order:
 
-    def __init__(self, addres,objectName,user):
-        self.address = addres
-        self.price = 0.0
-        self.stlFilePath = objectName
+    def __init__(self, address:Address,objectName:str,user:str):
+        self.address = address
+        self.stlFilePath = FindStlFilePath(objectName)
         self.userID = user
         self.status = "pending"
+        self.price = CalculateCost(self.stlFilePath)
 
-    def __str__(self):
-        return str({"addres":self.address})
+
     
-    def confirmPayment(self):
-        self.status = "paid"
+    def makePayment(self,payment:Payment):
+        if payment.paymentSent>=self.price:
+            self.status = "paid"
+            return True
+        else:
+            return False
 
     def confirmShipment(self):
         self.status = "shipped"
 
     def calculateCost(self):
         CalculateCost(self.stlFilePath)
+
+
+
+
+
+
+
+
 

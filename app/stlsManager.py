@@ -1,4 +1,7 @@
 
 
 def CalculateCost(stlsFileName):
-    return
+    return 1
+
+def FindStlFilePath(filename):
+    return filename
