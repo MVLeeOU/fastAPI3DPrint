@@ -19,7 +19,7 @@ def Calc_Cost(filename: str):
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
     returnvalue = os.stat(file_path).st_size
-    return {"filename": filename, "content": returnvalue}
+    return {"filename": filename, "content": returnvalue/10000}
 
 
 def FindStlFilePath(filename):

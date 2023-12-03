@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from app.orderManager import *
 from app.stlsManager import *
+from app.userManager import *
 from typing import Union
 import time
 import json
@@ -19,12 +20,41 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 app = FastAPI()
 
 orders = []
+users = []
 
 
 @app.get("/")
 def read_root():
     return {"Hello": "Fast"}
 
+@app.post("/userAuthent/newUser")
+def new_user(
+    street: int = Body(...),
+    town: str = Body(...),
+    postal: int = Body(...),
+    userName: str = Body(...),
+    password: str = Body(...),
+):
+    try:
+        if User.find_user_by_id(users,userName) is not None:
+            raise HTTPException(status_code=409, detail="User already exists")
+            
+        newUser = User(Address(street, town, postal), userName, password)
+        users.append(newUser)
+        return {"Hello": str(users[-1])}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.get("/userAuthent/allUsers")
+def read_all_Users():
+    return {"users": [str(user) for user in users]}
+
+@app.get("/userAuthent/GetUser/{userid}")
+def getUserId(userid:str):
+    user = User.find_user_by_id(users,userid)
+    if user == None:
+        raise HTTPException(status_code=404, detail="user not found")
+    return {user}
 
 @app.post("/checkout/newOrder")
 def new_order(
@@ -35,6 +65,7 @@ def new_order(
     userName: str = Body(...),
 ):
     try:
+        #TODO add code to connect this directly to a user and check that a user exists
         neworder = Order(Address(street, town, postal), modelName, userName)
         orders.append(neworder)
         return {"Hello": str(orders[-1])}
