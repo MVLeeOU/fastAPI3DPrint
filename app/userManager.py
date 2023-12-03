@@ -1,5 +1,4 @@
 
-from app.stlsManager import CalculateCost
 class User:
 
     def __init__(self, addres,objectName,user):
@@ -9,9 +8,7 @@ class User:
         self.password = "pending"
 
     def __str__(self):
-        return str({"addres":self.address})
-
-    def calculateCost(self):
-        CalculateCost(self.stlFilePath)
+        return f"User: {self.userID}, Address: {self.address}, Object Name: {self.thingverseUsername}, Password: {self.password}"
 
     
+

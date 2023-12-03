@@ -1,5 +1,5 @@
 
-
+import os
 from app.orderManager import *
 from app.stlsManager import *
 from app.userManager import *
@@ -10,8 +10,10 @@ order1 = Order(adressObj,"cat","ab39")
 
 print("start unit test:")
 
-print(order1.address)
+print(order1)
+
 
 confirmation = order1.makePayment(Payment("andersen","ball",adressObj,1))
 print("order confirmed:",confirmation)
 print("status:",order1.status)
+
