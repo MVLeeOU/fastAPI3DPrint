@@ -29,22 +29,26 @@ def read_root():
 
 @app.post("/userAuthent/newUser")
 def new_user(
-    street: int = Body(...),
-    town: str = Body(...),
-    postal: int = Body(...),
-    userName: str = Body(...),
+    fullName: str = Body(...),
+    fullAddress: str = Body(...),
+    username: str = Body(...),
     password: str = Body(...),
+    email: str = Body(...),
+    phoneNumber: str = Body(...),
 ):
     try:
-        if User.find_user_by_id(users,userName) is not None:
-            raise HTTPException(status_code=409, detail="User already exists")
-            
-        newUser = User(Address(street, town, postal), userName, password)
+        if User.find_user_by_id(users,username) is not None:
+            raise HTTPException(status_code=409, detail='User already exists')
+        
+        newUser = User(fullName, fullAddress, username, password, email, phoneNumber)
         users.append(newUser)
         return {"Hello": str(users[-1])}
+    
+    except HTTPException as e:
+        raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
 @app.get("/userAuthent/allUsers")
 def read_all_Users():
     return {"users": [str(user) for user in users]}
@@ -58,7 +62,7 @@ def getUserId(userid:str):
 
 @app.post("/checkout/newOrder")
 def new_order(
-    street: int = Body(...),
+    street: str = Body(...),
     town: str = Body(...),
     postal: int = Body(...),
     modelName: str = Body(...),
